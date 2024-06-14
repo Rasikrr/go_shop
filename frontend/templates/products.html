@@ -1,0 +1,223 @@
+{{template "header.html"}}
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="/">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <form method="GET" action="/products">
+                        <button class="search-filters" type="submit" role="button">Search</button>
+                    <div class="shop__sidebar">
+                        <div class="shop__sidebar__accordion">
+                            <div class="accordion" id="accordionExample">
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseOne">For</a>
+                                    </div>
+                                    <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul class="nice-scroll">
+                                                    <li class="category-item"><a href="#">Men </a><input type="radio" name="sex" value="men" class="category-radio"></li>
+                                                    <li class="category-item"><a href="#">Women </a><input type="radio" name="sex" value="women" class="category-radio"></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                    </div>
+                                    <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul class="nice-scroll">
+                                                    {{range .cats}}
+                                                        <li class="category-item"><a href="#">{{.Name}} </a><input type="checkbox" class="category-checkbox" name="categories" value="{{.Name}}"></li>
+                                                    {{end}}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseTwo">Brands</a>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul>
+                                                    {{range .brands}}
+                                                        <li class="category-item"><a href="#">{{.Name}}</a><input type="checkbox" class="category-checkbox" name="brands" value="{{.Name}}"></li>
+                                                    {{end}}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                                    </div>
+                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__price">
+                                                <p>
+                                                    <label for="amount">Price range:</label>
+                                                    <input type="text" id="amount" name="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                                </p>
+                                                <div id="slider-range"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                    </div>
+                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__size">
+                                                {{range .sizes}}
+                                                    <label for="{{.Size}}">{{.Size}}
+                                                        <input type="checkbox" id="{{.Size}}" name="sizes" value="{{.Size}}">
+                                                    </label>
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
+                                    </div>
+                                    <div id="collapseSix" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__tags">
+                                                <a href="#">Product</a>
+                                                <a href="#">Bags</a>
+                                                <a href="#">Shoes</a>
+                                                <a href="#">Fashion</a>
+                                                <a href="#">Clothing</a>
+                                                <a href="#">Hats</a>
+                                                <a href="#">Accessories</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="col-lg-9">
+                    <div class="shop__product__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                {{ if gt (len .products) 0}}
+                                    <div class="shop__product__option__left">
+                                        <p>Showing 1–12 of {{len .products}} results</p>
+                                    </div>
+                                {{end}}
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+{{/*                                <div class="shop__product__option__right">*/}}
+{{/*                                    <p>Sort by Popularity:</p>*/}}
+{{/*                                    <select>*/}}
+{{/*                                        <option value="popularity">Most Popular</option>*/}}
+{{/*                                    </select>*/}}
+{{/*                                </div>*/}}
+                                {{ if gt (len .products) 0}}
+                                    <div class="shop__product__option__right">
+                                        <p>Sort by Price:</p>
+                                        <select>
+                                            <option value="lth">Low To High</option>
+                                            <option value="htl">High To Low</option>
+                                        </select>
+                                    </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="catalog">
+                        {{if eq (len .products) 0 }}
+                            <div class="col-lg-12 text-center">
+                                <h2 class="mt-5 mb-5" style="color: #888; font-weight: 300;">No products found</h2>
+                                <img src="/static/img/prodsnotfound.png" alt="No products" style="width: 50%; margin-bottom: 10px;">
+                                <p style="color: #aaa;">We couldn't find any products matching your criteria.</p>
+                                <a href="/products" class="btn btn-primary mt-3">Back to Shop</a>
+                            </div>
+                        {{end}}
+                        {{range .products}}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="/static{{index .PathsToPhotos 0}}">
+                                        <ul class="product__hover">
+                                            <li><a href="#"><img src="/static/img/icon/heart.png" alt=""></a></li>
+                                            <li><a href="#"><img src="/static/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6><a href="products/{{.Slug}}">{{.Name}}</a></h6>
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <h5>${{.Price}}</h5>
+                                        <div class="product__color__select">
+                                            <label for="pc-4">
+                                                <input type="radio" id="pc-4">
+                                            </label>
+                                            <label class="active black" for="pc-5">
+                                                <input type="radio" id="pc-5">
+                                            </label>
+                                            <label class="grey" for="pc-6">
+                                                <input type="radio" id="pc-6">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{end}}
+                    </div>
+                    {{if gt (len .products) 0 }}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="product__pagination">
+                                    <a class="active" href="#">1</a>
+                                    <a href="#">2</a>
+                                    <a href="#">3</a>
+                                    <span>...</span>
+                                    <a href="#">21</a>
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+{{template "footer.html" }}
