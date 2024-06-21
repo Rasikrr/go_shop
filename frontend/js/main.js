@@ -224,7 +224,7 @@ $(function() {
         range: true,
         min: 0,
         max: 500,
-        values: [75, 300],
+        values: [0, 500],
         slide: function(event, ui) {
             $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
         }
@@ -316,5 +316,91 @@ document.querySelectorAll('.nav-link').forEach(function(tab) {
         // Add active class to corresponding tab content
         var id = this.getAttribute('href');
         document.querySelector(id).classList.add('active');
+    });
+});
+
+
+function handleClick(clickedRadio) {
+    // Get all radio buttons
+    var radios = document.querySelectorAll('.size-radio');
+
+    // Loop through all radio buttons
+    for (var i = 0; i < radios.length; i++) {
+        var radio = radios[i];
+        var label = radio.parentElement; // Get the parent element (label) of the radio button
+
+        // If the radio button is the one that was clicked, add the 'active' class to its label
+        if (radio === clickedRadio) {
+            label.classList.add('active');
+        }
+        // If the radio button is not the one that was clicked, remove the 'active' class from its label
+        else {
+            label.classList.remove('active');
+        }
+    }
+}
+
+$(document).ready(function(){
+    $(".category-checkbox").change(function(){
+        $(this).parent().next('ul').find('.subcategory-checkbox').prop('checked', this.checked);
+    });
+});
+
+window.onload = function() {
+    // Get URL parameters
+    var params = new URLSearchParams(window.location.search);
+
+    // Get all checkboxes
+    var checkboxes = document.querySelectorAll('.subcategory-checkbox');
+
+    // Loop through checkboxes
+    checkboxes.forEach(function(checkbox) {
+        // Get the value of the checkbox
+        var value = checkbox.value;
+
+        // Check if the URL parameters include the checkbox's value
+        if (params.getAll('subcategories').includes(value)) {
+            // If they do, check the checkbox
+            checkbox.checked = true;
+        }
+    });
+};
+window.onload = function() {
+    // Get URL parameters
+    var params = new URLSearchParams(window.location.search);
+
+    // Get all checkboxes for sizes
+    var checkboxes = document.querySelectorAll('input[name="sizes"]');
+
+    // Loop through checkboxes
+    checkboxes.forEach(function(checkbox) {
+        // Get the value of the checkbox
+        var value = checkbox.value;
+
+        // Check if the URL parameters include the checkbox's value
+        if (params.getAll('sizes').includes(value)) {
+            // If they do, check the checkbox
+            checkbox.checked = true;
+
+            // Add 'active' class to parent label element
+            checkbox.parentElement.classList.add('active');
+        }
+    });
+};
+// Get all checkboxes for sizes
+var checkboxes = document.querySelectorAll('input[name="sizes"]');
+
+// Loop through checkboxes
+checkboxes.forEach(function(checkbox) {
+    // Add event listener to checkbox
+    checkbox.addEventListener('change', function() {
+        // If checkbox is checked
+        if (this.checked) {
+            // Add 'active' class to parent label element
+            this.parentElement.classList.add('active');
+        } else {
+            // Remove 'active' class from parent label element
+            this.parentElement.classList.remove('active');
+        }
     });
 });

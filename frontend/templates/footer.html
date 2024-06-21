@@ -70,8 +70,8 @@
 <div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="search-close-switch">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
+        <form class="search-model-form" method="GET" action="/products" >
+            <input type="text" name="prod-name" id="search-input" placeholder="Search here.....">
         </form>
     </div>
 </div>
@@ -90,7 +90,10 @@
 <script src="/static/js/main.js"></script>
 <script src="/static/js/products.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="path/to/jquery.slim.min.js"></script>
+<script src="path/to/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </body>
 

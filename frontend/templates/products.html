@@ -50,8 +50,13 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__brand">
                                                 <ul class="nice-scroll">
-                                                    {{range .cats}}
-                                                        <li class="category-item"><a href="#">{{.Name}} </a><input type="checkbox" class="category-checkbox" name="categories" value="{{.Name}}"></li>
+                                                    {{range .catsAndSubcats }}
+                                                        <li class="category-item"><a href="#">{{.Category.Name}} </a><input type="checkbox" class="category-checkbox" name="categories" value="{{.Category.Name}}"></li>
+                                                        <ul>
+                                                            {{range .SubCategories}}
+                                                                <li class="category-item" style="margin-left: 20px"><a href="#">&#x2022 {{.Name}}</a><input type="checkbox" class="subcategory-checkbox" name="subcategories" value="{{.Name}}"></li>
+                                                            {{end}}
+                                                        </ul>
                                                     {{end}}
                                                 </ul>
                                             </div>
@@ -80,7 +85,7 @@
                                     </div>
                                     <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
-                                            <div class="shop__sidebar__price">
+                                            <div class="shop__sidebar__price" style="margin: 15px">
                                                 <p>
                                                     <label for="amount">Price range:</label>
                                                     <input type="text" id="amount" name="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
@@ -99,7 +104,7 @@
                                             <div class="shop__sidebar__size">
                                                 {{range .sizes}}
                                                     <label for="{{.Size}}">{{.Size}}
-                                                        <input type="checkbox" id="{{.Size}}" name="sizes" value="{{.Size}}">
+                                                        <input type="checkbox" id="{{.Size}}" name="sizes" value="{{.Size}}" disabled>
                                                     </label>
                                                 {{end}}
                                             </div>
@@ -140,12 +145,6 @@
                                 {{end}}
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-{{/*                                <div class="shop__product__option__right">*/}}
-{{/*                                    <p>Sort by Popularity:</p>*/}}
-{{/*                                    <select>*/}}
-{{/*                                        <option value="popularity">Most Popular</option>*/}}
-{{/*                                    </select>*/}}
-{{/*                                </div>*/}}
                                 {{ if gt (len .products) 0}}
                                     <div class="shop__product__option__right">
                                         <p>Sort by Price:</p>
@@ -177,7 +176,7 @@
                                         </ul>
                                     </div>
                                     <div class="product__item__text">
-                                        <h6><a href="products/{{.Slug}}">{{.Name}}</a></h6>
+                                        <h6><a href="/products/{{.Slug}}">{{.Name}}</a></h6>
                                         <div class="rating">
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
@@ -205,13 +204,11 @@
                     {{if gt (len .products) 0 }}
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="product__pagination">
-                                    <a class="active" href="#">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <span>...</span>
-                                    <a href="#">21</a>
-                                </div>
+{{/*                                <div class="product__pagination">*/}}
+{{/*                                    {{range $page := (ran 1 (divPag (len .products) 15)) }}*/}}
+{{/*                                        <a class="{{if eq .active $page}} active {{end}}" href="#">{{$page}}</a>*/}}
+{{/*                                    {{end}}*/}}
+{{/*                                </div>*/}}
                             </div>
                         </div>
                     {{end}}

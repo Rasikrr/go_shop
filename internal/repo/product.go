@@ -2,7 +2,11 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"go_shop/internal/models"
 	mn "go_shop/internal/storage/mongo"
 	"log"
@@ -15,6 +19,8 @@ type ProductRepo interface {
 	GetAllBrands() ([]*models.Brand, error)
 	GetProducts(d bson.D) ([]*models.Product, error)
 	GetProductBySlug(slug string) (*models.Product, error)
+	GetSubCatById(id primitive.ObjectID) (*models.Subcategory, error)
+	GetRelatedProducts(category, subcategory string) ([]*models.Product, error)
 }
 
 type ProductRepoImpl struct {
@@ -25,6 +31,33 @@ func NewProductRepo(db *mn.Storage) *ProductRepoImpl {
 	return &ProductRepoImpl{
 		storage: db,
 	}
+}
+
+func (p *ProductRepoImpl) GetRelatedProducts(category, subcategory string) ([]*models.Product, error) {
+	collection := p.storage.Client.Database("go_shop").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+	defer cancel()
+
+	filter := bson.D{{"$or", []bson.D{
+		bson.D{{"category", category}},
+		bson.D{{"subcategory", subcategory}},
+	}}}
+	opts := options.Find().SetLimit(4)
+
+	cursor, err := collection.Find(ctx, filter, opts)
+	if err != nil {
+		log.Println("failed to get related products", err)
+		return nil, err
+	}
+
+	var products []*models.Product
+
+	if err := cursor.All(ctx, &products); err != nil {
+		log.Println("failed to decode related products", err)
+		return nil, err
+	}
+	return products, nil
 }
 
 func (p *ProductRepoImpl) GetProducts(filters bson.D) ([]*models.Product, error) {
@@ -129,4 +162,20 @@ func (p *ProductRepoImpl) GetAllBrands() ([]*models.Brand, error) {
 		return nil, err
 	}
 	return brands, nil
+}
+
+func (p *ProductRepoImpl) GetSubCatById(id primitive.ObjectID) (*models.Subcategory, error) {
+	collection := p.storage.Client.Database("go_shop").Collection("subcategories")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+	defer cancel()
+	subcat := new(models.Subcategory)
+	res := collection.FindOne(ctx, bson.D{{"_id", id}})
+	err := res.Decode(subcat)
+	if err != nil {
+		if !errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, err
+		}
+	}
+	return subcat, nil
 }

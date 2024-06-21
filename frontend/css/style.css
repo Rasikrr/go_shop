@@ -1665,8 +1665,18 @@ ol {
 	display: inline-block;
 	margin-right: 50px;
 }
+.product__details__option__size-pd {
+	display: inline-block;
+	margin-right: 50px;
+}
 
 .product__details__option__size span {
+	color: #111111;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.product__details__option__size-pd span {
 	color: #111111;
 	display: inline-block;
 	margin-right: 10px;
@@ -1692,6 +1702,31 @@ ol {
 }
 
 .product__details__option__size label input {
+	position: absolute;
+	visibility: hidden;
+}
+
+
+.product__details__option__size-pd label {
+	color: #111111;
+	font-size: 15px;
+	font-weight: 700;
+	text-transform: uppercase;
+	display: inline-block;
+	border: 1px solid #e5e5e5;
+	padding: 6px 15px;
+	margin-bottom: 0;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.product__details__option__size-pd label.active {
+	background: #111111;
+	color: #ffffff;
+	border-color: #111111;
+}
+
+.product__details__option__size-pd label input {
 	position: absolute;
 	visibility: hidden;
 }
@@ -3743,6 +3778,12 @@ ol {
 		margin-right: 0;
 		margin-bottom: 25px;
 	}
+	.product__details__option__size-pd {
+		display: block;
+		margin-right: 0;
+		margin-bottom: 25px;
+	}
+
 	.product__details__last__option h5:before {
 		width: 440px;
 	}
@@ -3883,4 +3924,17 @@ ol {
 	width: fit-content;
 	word-break: break-word;
 	border: 0;
+}
+.links a {
+	color: #0b0b0b; /* Change this to any color you want */
+}
+
+a {
+	color: inherit;      /* Changes the link color to the color of its parent */
+	text-decoration: none; /* Removes the underline */
+}
+
+a:hover {
+	color: inherit;      /* Keeps the link color the same on hover */
+	text-decoration: none; /* Keeps the link without underline on hover */
 }

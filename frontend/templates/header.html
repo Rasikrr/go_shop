@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/static/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="/static/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/static/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/profile.css" type="text/css">
 </head>
 
 <body>
@@ -36,7 +37,7 @@
 <div class="offcanvas-menu-wrapper">
     <div class="offcanvas__option">
         <div class="offcanvas__links">
-            <a href="#">Sign in</a>
+            <a href="./auth">Sign in</a>
             <a href="#">FAQs</a>
         </div>
         <div class="offcanvas__top__hover">
@@ -57,6 +58,7 @@
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__text">
         <p>Free shipping, 30-day return or refund guarantee.</p>
+
     </div>
 </div>
 <!-- Offcanvas Menu End -->
@@ -74,7 +76,11 @@
                 <div class="col-lg-6 col-md-5">
                     <div class="header__top__right">
                         <div class="header__top__links">
-                            <a href="#">Sign in</a>
+                            {{if ne .session.Status "unauthorized"}}
+                                <a href="/profile/{{.session.User.FirstName}}" id="profile-button">{{.session.User.FirstName}}</a>
+                            {{else}}
+                                <a href="/auth" id="signin-button">Sign in</a>
+                            {{end}}
                             <a href="#">FAQs</a>
                         </div>
                         <div class="header__top__hover">
