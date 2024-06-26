@@ -262,6 +262,8 @@ $(document).ready(function() {
             $('input[name="sizes"][value="' + value + '"]').prop('checked', true);
         });
     }
+    var minVal = parseInt(document.getElementById('amount').getAttribute('min'));
+    var maxVal = parseInt(document.getElementById('amount').getAttribute('max'));
     if (params.price) {
         var decodedPrice = decodeURIComponent(params.price[0]);
         var priceRange = decodedPrice.split('-');
@@ -269,12 +271,25 @@ $(document).ready(function() {
         var maxPrice = parseInt(priceRange[1].replace('$', ''));
         console.log(minPrice, maxPrice)
 
+
         // Initialize the slider with the price range
         $("#slider-range").slider({
             range: true,
-            min: 0,
-            max: 500,
+            min: minVal,
+            max: maxVal,
             values: [minPrice, maxPrice],
+            slide: function(event, ui) {
+                $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+            }
+        });
+        $("#amount").val("$" + $("#slider-range").slider("values", 0) +
+            " - $" + $("#slider-range").slider("values", 1));
+    } else{
+        $("#slider-range").slider({
+            range: true,
+            min: minVal,
+            max: maxVal,
+            values: [minVal, maxVal],
             slide: function(event, ui) {
                 $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
             }
@@ -404,3 +419,31 @@ checkboxes.forEach(function(checkbox) {
         }
     });
 });
+
+
+
+function upload() {
+
+    const fileUploadInput = document.querySelector('.file-uploader');
+
+    // using index [0] to take the first file from the array
+    const image = fileUploadInput.files[0];
+
+    // check if the file selected is not an image file
+    if (!image.type.includes('image')) {
+        return alert('Only images are allowed!');
+    }
+
+    // check if size (in bytes) exceeds 10 MB
+    if (image.size > 10_000_000) {
+        return alert('Maximum upload size is 10MB!');
+    }
+
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(image);
+
+    fileReader.onload = (fileReaderEvent) => {
+        const profilePicture = document.querySelector('.profile-picture');
+        profilePicture.style.backgroundImage = `url(${fileReaderEvent.target.result})`;
+    }
+}

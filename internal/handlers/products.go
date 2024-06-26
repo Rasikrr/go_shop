@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	mySession "go_shop/internal/lib/session"
 	"go_shop/internal/service"
 	"log"
 )
@@ -16,34 +17,42 @@ func NewProductHandler(service service.ProductService) *ProductHandler {
 	}
 }
 
-func (p *ProductHandler) Get(ctx *gin.Context) {
+func (p *ProductHandler) Get(c *gin.Context) {
+	session := mySession.GetSession(c)
+
 	sizes, err := p.service.GetAllSizes()
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 	}
-	catsAndSubcats, err := p.service.GetAllCatsAndSubCats()
+	catsAndSubCats, err := p.service.GetAllCatsAndSubCats()
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 	}
 	brands, err := p.service.GetAllBrands()
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 	}
-	products, err := p.service.GetProducts(ctx)
+	products, err := p.service.GetProducts(c)
 	if err != nil {
 		log.Printf("Failed to get products: %v", err)
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 	}
-
-	ctx.HTML(200, "products.html", gin.H{
+	minPrice, maxPrice := p.service.GetMinAndMaxPrice(products)
+	c.HTML(200, "products.html", gin.H{
+		"session":        session,
 		"sizes":          sizes,
-		"catsAndSubcats": catsAndSubcats,
+		"catsAndSubcats": catsAndSubCats,
 		"brands":         brands,
 		"products":       products,
+		"minPrice":       minPrice,
+		"maxPrice":       maxPrice,
+		"page":           "shop",
 	})
 }
 
 func (p *ProductHandler) GetOne(c *gin.Context) {
+	session := mySession.GetSession(c)
+
 	slug := c.Param("slug")
 	product, err := p.service.GetBySlug(slug)
 	relatedProducts, err := p.service.GetRelatedProducts(product.Category, product.Subcategory)
@@ -52,7 +61,9 @@ func (p *ProductHandler) GetOne(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 	}
 	c.HTML(200, "product-details.html", gin.H{
+		"session":     session,
 		"product":     product,
 		"relatedProd": relatedProducts,
+		"page":        "shop",
 	})
 }

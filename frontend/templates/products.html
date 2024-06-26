@@ -1,4 +1,4 @@
-{{template "header.html"}}
+{{template "header.html" .}}
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-option">
         <div class="container">
@@ -88,7 +88,7 @@
                                             <div class="shop__sidebar__price" style="margin: 15px">
                                                 <p>
                                                     <label for="amount">Price range:</label>
-                                                    <input type="text" id="amount" name="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                                    <input type="text" min="{{.minPrice}}" max="{{.maxPrice}}" id="amount" name="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
                                                 </p>
                                                 <div id="slider-range"></div>
                                             </div>
@@ -184,7 +184,11 @@
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
                                         </div>
-                                        <h5>${{.Price}}</h5>
+                                        {{if eq .DiscountInPercent 0.0}}
+                                            <h5>${{.Price}}</h5>
+                                        {{else}}
+                                            <h5>${{sub .Price (mul (div .Price 100.0) .DiscountInPercent) }}</h5>
+                                        {{end}}
                                         <div class="product__color__select">
                                             <label for="pc-4">
                                                 <input type="radio" id="pc-4">

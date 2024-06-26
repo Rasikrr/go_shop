@@ -8,6 +8,7 @@ import (
 	"go_shop/internal/models"
 	"go_shop/internal/repo"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -15,6 +16,7 @@ import (
 type ProductService interface {
 	GetProducts(ctx *gin.Context) ([]*models.Product, error)
 	GetAllSizes() ([]*models.Size, error)
+	GetMinAndMaxPrice([]*models.Product) (float64, float64)
 	GetAllCategories() ([]*models.Category, error)
 	GetAllBrands() ([]*models.Brand, error)
 	GetBySlug(string) (*models.Product, error)
@@ -152,7 +154,6 @@ func (p *ProductServiceImpl) GetAllCatsAndSubCats() ([]*CatsAndSubCats, error) {
 			if err != nil {
 				return nil, err
 			}
-			fmt.Println(id, subcat.Name)
 			subCats = append(subCats, subcat)
 		}
 		catAndSubcats := &CatsAndSubCats{
@@ -162,4 +163,17 @@ func (p *ProductServiceImpl) GetAllCatsAndSubCats() ([]*CatsAndSubCats, error) {
 		catsAndSubCats = append(catsAndSubCats, catAndSubcats)
 	}
 	return catsAndSubCats, nil
+}
+
+func (s *ProductServiceImpl) GetMinAndMaxPrice(products []*models.Product) (float64, float64) {
+	min, max := math.MaxFloat64, -1.0
+	for _, p := range products {
+		if p.Price > max {
+			max = p.Price
+		}
+		if p.Price < min {
+			min = p.Price
+		}
+	}
+	return min, max
 }

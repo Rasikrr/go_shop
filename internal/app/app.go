@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 	"go_shop/internal/handlers"
+	mySession "go_shop/internal/lib/session"
+	"go_shop/internal/middleware"
 	"go_shop/internal/repo"
 	"go_shop/internal/service"
 	"go_shop/internal/storage/mongo"
@@ -51,23 +53,33 @@ func (a *App) Run() {
 	})
 	a.app.LoadHTMLGlob("./frontend/templates/*.html")
 	a.app.Static("/static", "./frontend/")
+	a.app.Static("/media", "./media/")
 
 	productRepo := repo.NewProductRepo(a.storage)
 	productsService := service.NewProductService(productRepo)
 	productsHandler := handlers.NewProductHandler(productsService)
+
+	authRepo := repo.NewAuthRepo(a.storage)
+	authService := service.NewAuthService(authRepo)
+	authHandler := handlers.NewAuthHandler(authService, a.sessionStore)
+
+	// Middlewares
+	authMiddleware := middleware.NewAuthMiddleware(a.sessionStore, authRepo)
+	a.app.Use(authMiddleware.CheckSession())
 
 	products := a.app.Group("/products")
 	{
 		products.GET("/", productsHandler.Get)
 		products.GET("/:slug", productsHandler.GetOne)
 	}
-	authRepo := repo.NewAuthRepo(a.storage)
-	authService := service.NewAuthService(authRepo)
-	authHandler := handlers.NewAuthHandler(authService, a.sessionStore)
 
 	a.app.GET("/", func(c *gin.Context) {
-		session := authHandler.CheckSession(c.Request)
-		c.HTML(200, "index.html", gin.H{"session": session})
+		session := mySession.GetSession(c)
+
+		c.HTML(200, "index.html", gin.H{
+			"session": session,
+			"page":    "home",
+		})
 	})
 
 	auth := a.app.Group("/auth")
@@ -76,14 +88,15 @@ func (a *App) Run() {
 		auth.POST("/signin", authHandler.SignIn)
 		auth.POST("/signup", authHandler.SignUp)
 		auth.GET("/logout", authHandler.Logout)
-		auth.GET("/profile/:user")
-		auth.POST()
+		auth.GET("/profile/:user", authHandler.Profile)
+		auth.POST("/profile/:user", authHandler.EditProfile)
 	}
 
 	if err := a.app.Run(srvConfig()); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
 		return
 	}
+
 }
 
 func (a *App) Shutdown() {

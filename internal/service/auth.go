@@ -3,24 +3,38 @@ package service
 import (
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go_shop/internal/models"
 	"go_shop/internal/repo"
+	"go_shop/internal/requests"
 	"golang.org/x/crypto/bcrypt"
+	"io"
 	"log"
+	"mime/multipart"
+	"os"
 	"unicode"
 )
 
-const MIN_PASSWORD_LEN = 8
+const (
+	MIN_PASSWORD_LEN = 8
+	MEDIA_DIR        = "media/profile/"
+)
 
 var (
 	ErrPasswordsDoNotMatch     = errors.New("passwords do not match")
 	ErrDuplicateEmailException = errors.New("user with this email is exists")
+	ErrUserDoNotExists         = errors.New("user with this email does npt exists")
 )
 
 type AuthService interface {
 	GetUser(email, password string) (*models.User, error)
+	GetUserByEmail(string) (*models.User, error)
 	CreateUser(name, email, pass1, pass2 string) (string, error)
+	UpdateUser(req *requests.EditProfile, photo *multipart.FileHeader, email string) error
+	saveProfilePhoto(*multipart.FileHeader) (string, error)
+	deleteProfilePhoto(path string) error
 	generateHashPassword(string) (string, error)
 	validatePassword(string) error
 	GetUserById(string) (*models.User, error)
@@ -124,4 +138,89 @@ func (s *AuthServiceImpl) GetUserById(id string) (*models.User, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (s *AuthServiceImpl) GetUserByEmail(email string) (*models.User, error) {
+	user, err := s.repo.GetUser(email)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return user, err
+		}
+		return nil, err
+	}
+	return user, nil
+}
+
+func (s *AuthServiceImpl) UpdateUser(req *requests.EditProfile, photo *multipart.FileHeader, email string) error {
+	if photo != nil {
+		user, err := s.GetUserByEmail(email)
+		if err != nil {
+			log.Printf("failed to get user | %v", err)
+			return err
+		}
+		if user.PhotoPath != "" {
+			if err := s.deleteProfilePhoto(MEDIA_DIR + user.PhotoPath); err != nil {
+				log.Printf("failed to delete previous profile photo | %v", err)
+				return err
+			}
+		}
+		fileName, err := s.saveProfilePhoto(photo)
+		if err != nil {
+			return err
+		}
+		req.PhotoPath = fileName
+	}
+	data, err := bson.Marshal(req)
+	if err != nil {
+		log.Printf("failed to prepare data for update | %v", err)
+		return err
+	}
+
+	var updateBSON bson.D
+	if err := bson.Unmarshal(data, &updateBSON); err != nil {
+		log.Printf("failed to prepare data for update | %v", err)
+		return err
+	}
+
+	if err := s.repo.UpdateUser(updateBSON, email); err != nil {
+		log.Printf("failed to update user | email: %s", email)
+		return err
+	}
+	return nil
+}
+
+func (s *AuthServiceImpl) saveProfilePhoto(fileFromForm *multipart.FileHeader) (string, error) {
+	fileName := uuid.New().String() + ".jpg"
+	filePath := MEDIA_DIR + fileName
+	file, err := os.Create(filePath)
+	if err != nil {
+		log.Printf("failed to create file | %v", err)
+		return "", err
+	}
+
+	defer file.Close()
+	f, err := fileFromForm.Open()
+	if err != nil {
+		log.Printf("failed to open file from form | %v", err)
+		return "", err
+	}
+
+	defer f.Close()
+
+	if _, err := io.Copy(file, f); err != nil {
+		log.Printf("failed to write file | %v", err)
+		return "", err
+	}
+	return fileName, nil
+}
+
+func (s *AuthServiceImpl) deleteProfilePhoto(path string) error {
+	err := os.Remove(path)
+	if err != nil {
+		if _, ok := err.(*os.PathError); ok {
+			log.Println("file does not exists")
+		}
+		return err
+	}
+	return nil
 }
