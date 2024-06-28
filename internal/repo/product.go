@@ -8,9 +8,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go_shop/internal/models"
+	"go_shop/internal/storage"
 	mn "go_shop/internal/storage/mongo"
 	"log"
-	"time"
+)
+
+var (
+	ErrNoDocuments = errors.New("no documents found")
+	ErrOutOfStock  = errors.New("product ouf of stock")
+	ErrNoSize      = errors.New("size does not found")
 )
 
 type ProductRepo interface {
@@ -20,6 +26,7 @@ type ProductRepo interface {
 	GetProducts(d bson.D) ([]*models.Product, error)
 	GetProductBySlug(slug string) (*models.Product, error)
 	GetSubCatById(id primitive.ObjectID) (*models.Subcategory, error)
+	GetTopSales(limit int) ([]*models.Product, error)
 	GetRelatedProducts(category, subcategory string) ([]*models.Product, error)
 }
 
@@ -34,14 +41,14 @@ func NewProductRepo(db *mn.Storage) *ProductRepoImpl {
 }
 
 func (p *ProductRepoImpl) GetRelatedProducts(category, subcategory string) ([]*models.Product, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("products")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.PRODUCTS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
 	filter := bson.D{{"$or", []bson.D{
-		bson.D{{"category", category}},
-		bson.D{{"subcategory", subcategory}},
+		{{"category", category}},
+		{{"subcategory", subcategory}},
 	}}}
 	opts := options.Find().SetLimit(4)
 
@@ -61,9 +68,9 @@ func (p *ProductRepoImpl) GetRelatedProducts(category, subcategory string) ([]*m
 }
 
 func (p *ProductRepoImpl) GetProducts(filters bson.D) ([]*models.Product, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("products")
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.PRODUCTS)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -83,9 +90,35 @@ func (p *ProductRepoImpl) GetProducts(filters bson.D) ([]*models.Product, error)
 	return products, nil
 }
 
+func (p *ProductRepoImpl) GetTopSales(limit int) ([]*models.Product, error) {
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.PRODUCTS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
+
+	defer cancel()
+
+	opt := options.Find()
+	opt.SetSort(bson.D{{"discount_in_percent", -1}})
+	if limit != -1 {
+		opt.SetLimit(int64(limit))
+	}
+
+	cur, err := collection.Find(ctx, bson.D{{}}, opt)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return []*models.Product{}, nil
+		}
+		return nil, err
+	}
+	var products []*models.Product
+	if err := cur.All(ctx, &products); err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
 func (p *ProductRepoImpl) GetProductBySlug(slug string) (*models.Product, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("products")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.PRODUCTS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -99,8 +132,8 @@ func (p *ProductRepoImpl) GetProductBySlug(slug string) (*models.Product, error)
 }
 
 func (p *ProductRepoImpl) GetAllSizes() ([]*models.Size, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("sizes")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.SIZES)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -122,8 +155,8 @@ func (p *ProductRepoImpl) GetAllSizes() ([]*models.Size, error) {
 }
 
 func (p *ProductRepoImpl) GetAllCategories() ([]*models.Category, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("categories")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.CATEGORIES)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -145,8 +178,8 @@ func (p *ProductRepoImpl) GetAllCategories() ([]*models.Category, error) {
 }
 
 func (p *ProductRepoImpl) GetAllBrands() ([]*models.Brand, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("brands")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.BRANDS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -165,17 +198,17 @@ func (p *ProductRepoImpl) GetAllBrands() ([]*models.Brand, error) {
 }
 
 func (p *ProductRepoImpl) GetSubCatById(id primitive.ObjectID) (*models.Subcategory, error) {
-	collection := p.storage.Client.Database("go_shop").Collection("subcategories")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := p.storage.Client.Database(storage.DB_NAME).Collection(storage.SUBCATEGORIES)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
-	subcat := new(models.Subcategory)
+	subCat := new(models.Subcategory)
 	res := collection.FindOne(ctx, bson.D{{"_id", id}})
-	err := res.Decode(subcat)
+	err := res.Decode(subCat)
 	if err != nil {
 		if !errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, err
 		}
 	}
-	return subcat, nil
+	return subCat, nil
 }

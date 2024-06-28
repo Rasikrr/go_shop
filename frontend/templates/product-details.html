@@ -1,4 +1,4 @@
-{{template "header.html"}}
+{{template "header.html" .}}
     <!-- Shop Details Section Begin -->
     <section class="shop-details">
         <div class="product__details__pic">
@@ -43,76 +43,67 @@
             <div class="container">
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
-                        <div class="product__details__text">
-                            <h4>{{.product.Name}}</h4>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o"></i>
-                                <span> - 5 Reviews</span>
-                            </div>
-                            {{if not (eq .product.DiscountInPercent 0.0)}}
-                                {{ $discountedPrice := mul .product.Price (div .product.DiscountInPercent 100) }}
-                                {{ $finalPrice := sub .product.Price $discountedPrice }}
-                                <h3>${{$finalPrice}} <span>${{.product.Price}}</span></h3>
-                            {{else}}
-                                <h3>${{.product.Price}}</h3>
-                            {{end}}
-                            <p>{{.product.Description}}</p>
-                            <div class="product__details__option">
-                                <div class="product__details__option__size-pd">
-                                    <span>Size:</span>
-                                    {{range .product.Sizes}}
-                                        <label for="{{.Size}}">{{.Size}}
-                                            <input type="radio" class="size-radio" name="size" id="{{.Size}}" onclick="handleClick(this)" readonly>                                        </label>
-                                    {{end}}
+                        <form id="addToCartForm" method="POST" action="">
+                            <div class="product__details__text">
+                                <h4>{{.product.Name}}</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <span> - 5 Reviews</span>
                                 </div>
-                                <div class="product__details__option__color">
-                                    <span>Color:</span>
-                                    <label class="c-1" for="sp-1">
-                                        <input type="radio" id="sp-1">
-                                    </label>
-                                    <label class="c-2" for="sp-2">
-                                        <input type="radio" id="sp-2">
-                                    </label>
-                                    <label class="c-3" for="sp-3">
-                                        <input type="radio" id="sp-3">
-                                    </label>
-                                    <label class="c-4" for="sp-4">
-                                        <input type="radio" id="sp-4">
-                                    </label>
-                                    <label class="c-9" for="sp-9">
-                                        <input type="radio" id="sp-9">
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="product__details__cart__option">
-                                <div class="quantity">
-                                    <div class="pro-qty">
-                                        <input type="number" value="1">
+                                {{if not (eq .product.DiscountInPercent 0.0)}}
+                                    {{ $discountedPrice := mul .product.Price (div .product.DiscountInPercent 100) }}
+                                    {{ $finalPrice := sub .product.Price $discountedPrice }}
+                                    <h3 id="prod-price">${{$finalPrice}} <span>${{.product.Price}}</span></h3>
+                                {{else}}
+                                    <h3 id="prod-price">${{.product.Price}}</h3>
+                                {{end}}
+                                <p>{{.product.Description}}</p>
+                                <div class="product__details__option">
+                                    <div class="product__details__option__size-pd">
+                                        <span>Size:</span>
+                                        {{range .product.Sizes}}
+                                            {{if eq .Amount 0}}
+                                                <label for="{{.Size}}" style="background-color: rgba(70,70,70,0.29)">{{.Size}}
+                                                    <input type="radio" class="size-radio" name="size" id="{{.Size}}" onclick="handleClick(this)" disabled readonly>
+                                                </label>
+                                            {{else}}
+                                                <label for="{{.Size}}">{{.Size}}
+                                                    <input type="radio" class="size-radio" name="size" id="{{.Size}}" onclick="handleClick(this)"  readonly>
+                                                </label>
+                                            {{end}}
+                                        {{end}}
                                     </div>
                                 </div>
-                                <a href="#" class="primary-btn">add to cart</a>
+                                <div class="product__details__btns__option">
+                                    <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
+                                    <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                                </div>
+                                    <button class="addtocart" type="submit" product-id="{{.product.ID}}">
+                                        <div class="pretext">
+                                            ADD TO CART
+                                        </div>
+                                        <div class="pretext done">
+                                            <div class="posttext"><i class="fas fa-check"></i> ADDED</div>
+                                        </div>
+                                    </button>
+                                <div class="product__details__last__option">
+                                    <ul>
+                                        <li><span>SKU:</span>{{.product.ID}}</li>
+                                        <div class="links" style="color: #0b0b0b">
+                                            <li><span>Categories: </span>
+                                                <a href="/products?categories={{.product.Category}}">{{.product.Category}}</a>,
+                                                <a href="/products/?subcategories={{.product.Subcategory}}">{{.product.Subcategory}}</a>
+                                            </li>
+                                        </div>
+                                        <li><span>Tag:</span> Clothes, Skin, Body</li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="product__details__btns__option">
-                                <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                                <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
-                            </div>
-                            <div class="product__details__last__option">
-                                <ul>
-                                    <li><span>SKU:</span>{{.product.ID}}</li>
-                                    <div class="links" style="color: #0b0b0b">
-                                        <li><span>Categories: </span>
-                                            <a href="/products?categories={{.product.Category}}">{{.product.Category}}</a>,
-                                            <a href="/products/?subcategories={{.product.Subcategory}}">{{.product.Subcategory}}</a>
-                                        </li>
-                                    </div>
-                                    <li><span>Tag:</span> Clothes, Skin, Body</li>
-                                </ul>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class="row">

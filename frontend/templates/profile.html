@@ -37,7 +37,10 @@
                         <div class="col-md-12"><label class="labels">Address </label><input type="text" name="address" class="form-control" placeholder="Enter Address" value="{{.user.Address}}"></div>
                         <div class="col-md-12"><label class="labels">Postcode</label><input type="text" name="postCode" class="form-control" placeholder="Enter Postcode" value="{{.user.PostCode}}"></div>
                     </div>
-                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Save Profile</button></div>
+                    <div class="mt-5 text-center">
+                        <button class="btn btn-secondary profile-button" type="button" onclick="location.href='/auth/logout'">Logout</button>
+                        <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                    </div>
                 </div>
             </div>
         </div>

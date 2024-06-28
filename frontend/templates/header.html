@@ -108,13 +108,8 @@
                     <ul>
                         <li {{if eq .page "home"}} class="active" {{end}}><a href="/">Home</a></li>
                         <li {{if eq .page "shop"}} class="active" {{end}}><a href="/products">Shop</a></li>
-                        <li {{if eq .page "pages" }} class="active" {{end}}><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="/static/about.html">About Us</a></li>
-                                <li><a href="product-details.html">Shop Details</a></li>
-                            </ul>
-                        </li>
-                        <li {{if eq .page "contacts" }} class="active" {{end}}><a href="contact.html">Contacts</a></li>
+                        <li {{if eq .page "about" }} class="active" {{end}}><a href="/about">About Us</a></li>
+                        <li {{if eq .page "contacts" }} class="active" {{end}}><a href="/contacts">Contacts</a></li>
                     </ul>
                 </nav>
             </div>
@@ -122,8 +117,12 @@
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
                     <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-                    <a href="#"><img src="/static/img/icon/cart.png" alt=""> <span>0</span></a>
-                    <div class="price">$0.00</div>
+                    <a href="/cart"><img src="/static/img/icon/cart.png" alt=""> <span>0</span></a>
+                    {{if eq .cartOverall 0.0}}
+                        <div class="price" id="cart-overall">$0.00</div>
+                    {{else}}
+                        <div class="price" id="cart-overall">${{.cartOverall}}</div>
+                    {{end}}
                 </div>
             </div>
         </div>
@@ -131,4 +130,52 @@
     </div>
 </header>
 <!-- Header Section End -->
+<!-- -->
+<div class="wrapper" id="notification" style="display: none">
+
+    <div class="notifications">
+        <div class="notifications__item">
+            <div class="notifications__item__avatar">
+                <img src="https://static-00.iconduck.com/assets.00/alert-icon-2048x1935-lv49434z.png" />
+            </div>
+
+            <div class="notifications__item__content">
+                <span class="notifications__item__title">Notification</span>
+                <span class="notifications__item__message">Just commented on your last post</span>
+            </div>
+
+            <div>
+                <div class="notifications__item__option archive js-option auth-btn">
+                    <i class="fas"></i>
+                </div>
+                <div class="notifications__item__option delete js-option">
+                    <i class="fas"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper" id="notification-good" style="display: none">
+
+    <div class="notifications">
+        <div class="notifications__item">
+            <div class="notifications__item__avatar">
+                <img src="https://www.freeiconspng.com/thumbs/checkmark-png/black-checkmark-png-4.png" />
+            </div>
+
+            <div class="notifications__item__content">
+                <span class="notifications__item__title">Notification</span>
+                <span class="notifications__item__message" id="good-mess">Just commented on your last post</span>
+            </div>
+
+            <div>
+                <div class="notifications__item__option archive js-option" id="good-btn">
+                    <i class="fas"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {{end}}

@@ -968,9 +968,7 @@ ol {
 	visibility: visible;
 }
 
-.product__item:hover .product__item__text h6 {
-	opacity: 0;
-}
+
 
 .product__item:hover .product__item__text .product__color__select {
 	opacity: 1;
@@ -983,14 +981,14 @@ ol {
 }
 
 .product__item__pic .label {
-	color: #111111;
+	color: #ffffff;
 	font-size: 11px;
 	font-weight: 700;
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	display: inline-block;
 	padding: 4px 15px 2px;
-	background: #ffffff;
+	background: #c5391b;
 	position: absolute;
 	left: 0;
 	top: 20px;
@@ -3937,4 +3935,576 @@ a {
 a:hover {
 	color: inherit;      /* Keeps the link color the same on hover */
 	text-decoration: none; /* Keeps the link without underline on hover */
+}
+
+
+.product__item:hover .product__item__text h6, a {
+	color: #e30202;
+
+}
+
+
+.fa-cart-plus{
+	background: #a10909;
+}
+
+.addtocart{
+	display:block;
+	padding:0.5em 1em 0.5em 1em;
+	border-radius:10px;
+	border:none;
+	font-size:20px;
+	position:relative;
+	background: #e30202;
+	cursor:pointer;
+	height:2em;
+	width:10em;
+	overflow:hidden;
+	transition:transform 0.1s;
+	z-index:1;
+}
+.addtocart:hover{
+	transform:scale(1.1);
+}
+.pretext{
+	color:#fff;
+	background: #e30202;
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	font-family: 'Quicksand', sans-serif;
+}
+i{
+	margin-right:10px;
+}
+.done{
+	background:#be2edd;
+	position:absolute;
+	width:100%;
+	top:0;
+	left:0;
+	transition:transform 0.3s ease;
+
+	transform:translate(-110%) skew(-40deg);
+}
+.posttext{
+	background:#be2edd;
+}
+.fa-check{
+	background:#be2edd;
+}
+.addtocart {
+	display: block;
+	margin: 0 auto;
+}
+
+
+/*==================================================
+=            Bootstrap 3 Media Queries             =
+==================================================*/
+
+
+
+
+/*==========  Mobile First Method  ==========*/
+
+/* Custom, iPhone Retina */
+@media only screen and (min-width : 320px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (min-width : 480px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+}
+
+
+
+/*==========  Non-Mobile First Method  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px) {
+
+}
+
+
+
+/*=====================================================
+=            Bootstrap 2.3.2 Media Queries            =
+=====================================================*/
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 979px) {
+
+}
+
+@media only screen and (max-width : 767px) {
+
+}
+
+@media only screen and (max-width : 480px) {
+
+}
+
+@media only screen and (max-width : 320px) {
+
+}
+
+
+/* default styles here for older browsers.
+   I tend to go for a 600px - 960px width max but using percentages
+*/
+@media only screen and (min-width:960px){
+	/* styles for browsers larger than 960px; */
+}
+@media only screen and (min-width:1440px){
+	/* styles for browsers larger than 1440px; */
+}
+@media only screen and (min-width:2000px){
+	/* for sumo sized (mac) screens */
+}
+@media only screen and (max-device-width:480px){
+	/* styles for mobile browsers smaller than 480px; (iPhone) */
+}
+@media only screen and (device-width:768px){
+	/* default iPad screens */
+}
+/* different techniques for iPad screening */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+	/* For portrait layouts only */
+}
+
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
+	/* For landscape layouts only */
+}
+
+/*******Nuevos mensajes de error******/
+
+.new-message-box {
+	margin: 15px 0;
+	padding-left: 20px;
+	margin-bottom: 25px!important;
+}
+
+.new-message-box p{
+	font-size: 1.15em;
+	font-weight: 600;
+}
+
+.info-tab {
+	width: 40px;
+	height: 40px;
+	display: inline-block;
+	position: relative;
+	top: 8px;
+}
+
+.info-tab {
+	float: left;
+	margin-left: -23px;
+}
+
+.info-tab i::before {
+	width: 24px;
+	height: 24px;
+	box-shadow: inset 12px 0 13px rgba(0,0,0,0.5);
+}
+
+.info-tab i::after {
+	width: 0;
+	height: 0;
+	border: 12px solid transparent;
+	border-bottom-color: #fff;
+	border-left-color: #fff;
+	bottom: -18px;
+}
+
+.info-tab i::before, .info-tab i::after {
+	content: "";
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	bottom: -17px;
+	transform: rotateX(60deg);
+}
+
+.note-box, .warning-box, .tip-box-success, .tip-box-danger, .tip-box-warning, .tip-box-info, .tip-box-alert {
+	padding: 12px 8px 3px 26px;
+}
+
+
+/***Success****/
+
+.new-message-box-success {
+	background: #eeeeee;
+	padding: 3px;
+	margin: 10px 0;
+}
+
+.tip-icon-success {
+	background: #8BC34A;//500
+}
+
+.tip-box-success {
+	color: #33691E;//900
+background: #DCEDC8;//100
+}
+
+.tip-icon-success::before {
+	font-size: 25px;
+	content:"\f00c";
+	top: 8px;
+	left: 11px;
+	font-family: FontAwesome;
+	position: absolute;
+	color: white;
+}
+
+.tip-icon-success i::before {
+	background: #8BC34A;//500
+}
+
+
+/*******Danger*******/
+.new-message-box-danger {
+	background: #eeeeee;
+	padding: 3px;
+	margin: 10px 0;
+}
+
+.tip-icon-danger {
+	background: #f44336;//500
+}
+
+.tip-box-danger {
+	color: #b71c1c;//900
+background: #FFCCBC;//100
+}
+
+.tip-icon-danger::before {
+	font-size: 25px;
+	content:"\f00d";
+	top: 8px;
+	left: 11px;
+	font-family: FontAwesome;
+	position: absolute;
+	color: white;
+}
+
+.tip-icon-danger i::before {
+	background: #f44336;//500
+}
+
+/*******warning*******/
+.new-message-box-warning {
+	background: #eeeeee;
+	padding: 3px;
+	margin: 10px 0;
+}
+
+.tip-icon-warning {
+	background: #FFEB3B;//500
+}
+
+.tip-box-warning {
+	color: #212121;//900
+background: #FFF9C4;//100
+}
+
+.tip-icon-warning::before {
+	font-size: 25px;
+	content:"\f071";
+	top: 8px;
+	left: 11px;
+	font-family: FontAwesome;
+	position: absolute;
+	color: #212121;
+}
+
+.tip-icon-warning i::before {
+	background: #FFEB3B;//500
+}
+
+/*******info*******/
+.new-message-box-info {
+	background: #eeeeee;
+	padding: 3px;
+	margin: 10px 0;
+}
+
+.tip-box-info {
+	color: #01579B;//900
+background: #B3E5FC;//100
+}
+
+.tip-icon-info {
+	background: #03A9F4;//500
+}
+
+.tip-icon-info::before {
+	font-size: 25px;
+	content:"\f129";
+	top: 8px;
+	left: 11px;
+	font-family: FontAwesome;
+	position: absolute;
+	color: white
+}
+
+.tip-icon-info i::before {
+	background: #03A9F4;//500
+}
+
+
+/*******info*******/
+.new-message-box-alert {
+	background: #FF6F00;
+	padding: 3px;
+	margin: 10px 0;
+}
+
+.tip-box-alert {
+	color: #212121;//900
+background: #FFF8E1;//100
+}
+
+.tip-icon-alert {
+	background: #FF6F00;//500
+}
+
+.tip-icon-alert::before {
+	font-size: 25px;
+	content:"\f06a";
+	top: 8px;
+	left: 11px;
+	font-family: FontAwesome;
+	position: absolute;
+	color: white
+}
+
+.tip-icon-alert i::before {
+	background: #FF6F00;//500
+}
+
+
+/*************************/
+
+.wrapper {
+	width: 480px;
+	margin: 50px auto;
+}
+
+
+.notifications__item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	height: 105px;
+	margin-bottom: 20px;
+	padding: 0 20px;
+
+	background-color: white;
+	border-radius: 5px;
+	box-shadow: 0px 15px 20px 0px rgb( 0, 0, 0, .2 );
+
+	transition: all .3s ease-in;
+	cursor: pointer;
+}
+
+.notifications__item__avatar {
+	width: 75px;
+	height: 75px;
+	overflow: hidden;
+	margin-right: 20px;
+
+}
+
+.notifications__item__avatar img {
+	width: 100%;
+	height: 100%;
+}
+
+.notifications__item__content { width: calc( 100% - 105px ); }
+.notifications__item__title,
+.notifications__item__message { display: block; }
+
+.notifications__item__title {
+	letter-spacing: 2px;
+	font-family: 'atvice', sans-serif;
+	font-size: 17px;
+}
+
+.notifications__item__message {
+	font-family: Roboto, sans-serif;
+	font-size: 14px;
+	color: #929292;
+}
+
+.notifications__item__option {
+	width: 20px;
+	height: 20px;
+	margin: 8px 0;
+
+	border-radius: 50%;
+	color: white;
+	opacity: 0;
+
+	font-size: 10px;
+	text-align: center;
+	line-height: 20px;
+
+	cursor: pointer;
+	transition: all .2s;
+}
+
+.notifications__item__option.archive { background-color: #3dc98c; }
+
+.notifications__item__option.delete { background-color: #c93d4d; }
+
+
+/*
+* Animation part
+*/
+.notifications__item:hover {
+	background-color: #f7f7f7;
+	transform: scale( 0.95 );
+	box-shadow: 0px 5px 10px 0px rgb( 0, 0, 0, .2 );
+}
+
+.notifications__item:hover .notifications__item__option { opacity: 1; }
+
+.notifications__item.archive .notifications__item__title,
+.notifications__item.delete .notifications__item__title {
+	color: white;
+}
+
+.notifications__item.archive .notifications__item__message,
+.notifications__item.delete .notifications__item__message {
+	color: #f3f3f3;
+}
+
+.notifications__item.archive {
+	background-color: #3dc98c;
+	animation: archiveAnimation 1.5s cubic-bezier(0, 0, 0, 1.12) forwards;
+	animation-delay: .6s;
+}
+
+.notifications__item.delete {
+	background-color: #c93d4d;
+	animation: deleteAnimation 1.5s cubic-bezier(0, 0, 0, 1.12) forwards;
+	animation-delay: .6s;
+}
+
+
+@keyframes archiveAnimation{
+	to {
+		transform: translateX( 100px );
+		opacity: 0;
+	}
+}
+
+@keyframes deleteAnimation{
+	to {
+		transform: translateX( -100px );
+		opacity: 0;
+	}
+}
+.notifications {
+	position: fixed;
+	right: 0;
+	top: 0;
+	margin-top: 100px;
+}
+.btn.profile-button {
+	margin: 0 30px; /* Adjust the value as needed */
+}
+
+@media screen and (max-width:768px) {
+	body {
+		display:block;
+	}
+	.container {
+		margin-top:70px;
+		margin-bottom:70px;
+	}
+}
+.btn {
+	z-index: 1;
+	overflow: hidden;
+	background: transparent;
+	position: relative;
+	padding: 8px 50px;
+	border-radius: 30px;
+	cursor: pointer;
+	font-size: 1em;
+	letter-spacing: 2px;
+	transition: 0.2s ease;
+	font-weight: bold;
+	margin: 5px 0px;
+	&.green {
+		border: 4px solid var(--green);
+		color: var(--blue);
+		&:before {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 0%;
+			height: 100%;
+			background: var(--green);
+			z-index: -1;
+			transition: 0.2s ease;
+		}
+		&:hover {
+			color: var(--white);
+			background: var(--green);
+			transition: 0.2s ease;
+			&:before {
+				width: 100%;
+			}
+		}
+	}
 }

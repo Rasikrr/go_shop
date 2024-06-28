@@ -30,17 +30,17 @@ type CatsAndSubCats struct {
 }
 
 type ProductServiceImpl struct {
-	repo repo.ProductRepo
+	prodRepo repo.ProductRepo
 }
 
 func NewProductService(repo repo.ProductRepo) *ProductServiceImpl {
 	return &ProductServiceImpl{
-		repo: repo,
+		prodRepo: repo,
 	}
 }
 
 func (p *ProductServiceImpl) GetRelatedProducts(category, subcategory string) ([]*models.Product, error) {
-	return p.repo.GetRelatedProducts(category, subcategory)
+	return p.prodRepo.GetRelatedProducts(category, subcategory)
 }
 
 func (p *ProductServiceImpl) GetProducts(ctx *gin.Context) ([]*models.Product, error) {
@@ -79,7 +79,7 @@ func (p *ProductServiceImpl) GetProducts(ctx *gin.Context) ([]*models.Product, e
 			{"amount", bson.D{{"$gt", 0}}},
 		}}}})
 	}
-	products, err := p.repo.GetProducts(query)
+	products, err := p.prodRepo.GetProducts(query)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (p *ProductServiceImpl) GetProducts(ctx *gin.Context) ([]*models.Product, e
 }
 
 func (p *ProductServiceImpl) GetAllSizes() ([]*models.Size, error) {
-	sizes, err := p.repo.GetAllSizes()
+	sizes, err := p.prodRepo.GetAllSizes()
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (p *ProductServiceImpl) GetAllSizes() ([]*models.Size, error) {
 }
 
 func (p *ProductServiceImpl) GetAllCategories() ([]*models.Category, error) {
-	categories, err := p.repo.GetAllCategories()
+	categories, err := p.prodRepo.GetAllCategories()
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func (p *ProductServiceImpl) GetAllCategories() ([]*models.Category, error) {
 }
 
 func (p *ProductServiceImpl) GetAllBrands() ([]*models.Brand, error) {
-	brands, err := p.repo.GetAllBrands()
+	brands, err := p.prodRepo.GetAllBrands()
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (p *ProductServiceImpl) GetAllBrands() ([]*models.Brand, error) {
 }
 
 func (p *ProductServiceImpl) GetBySlug(slug string) (*models.Product, error) {
-	product, err := p.repo.GetProductBySlug(slug)
+	product, err := p.prodRepo.GetProductBySlug(slug)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ func (p *ProductServiceImpl) parsePrice(price string) (float64, float64) {
 }
 
 func (p *ProductServiceImpl) GetAllCatsAndSubCats() ([]*CatsAndSubCats, error) {
-	cats, err := p.repo.GetAllCategories()
+	cats, err := p.prodRepo.GetAllCategories()
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func (p *ProductServiceImpl) GetAllCatsAndSubCats() ([]*CatsAndSubCats, error) {
 				log.Println("failed to get ID from hex")
 				return nil, err
 			}
-			subcat, err := p.repo.GetSubCatById(id)
+			subcat, err := p.prodRepo.GetSubCatById(id)
 			if err != nil {
 				return nil, err
 			}

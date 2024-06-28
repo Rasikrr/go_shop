@@ -88,13 +88,16 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "logged_out"})
-
+	c.Redirect(http.StatusMovedPermanently, "/")
 }
 
 func (h *AuthHandler) Profile(c *gin.Context) {
 	session := mySession.GetSession(c)
 	email := c.Param("user")
+	if session.Status == "unauthorized" {
+		c.Status(404)
+		return
+	}
 	if session.User.Email != email {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"status": "unauthorized",

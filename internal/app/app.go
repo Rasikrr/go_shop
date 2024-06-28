@@ -28,7 +28,7 @@ func NewApp() *App {
 	sessionStore := sessions.NewCookieStore([]byte(os.Getenv("SESSIONS_SECRET")))
 	sessionStore.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   3600 * 8,
+		MaxAge:   0,
 		HttpOnly: true,
 	}
 
@@ -55,9 +55,12 @@ func (a *App) Run() {
 	a.app.Static("/static", "./frontend/")
 	a.app.Static("/media", "./media/")
 
+	cartRepo := repo.NewCartRepo(a.storage)
+	cartService := service.NewCartService(cartRepo)
+
 	productRepo := repo.NewProductRepo(a.storage)
 	productsService := service.NewProductService(productRepo)
-	productsHandler := handlers.NewProductHandler(productsService)
+	productsHandler := handlers.NewProductHandler(productsService, cartService)
 
 	authRepo := repo.NewAuthRepo(a.storage)
 	authService := service.NewAuthService(authRepo)
@@ -66,6 +69,8 @@ func (a *App) Run() {
 	// Middlewares
 	authMiddleware := middleware.NewAuthMiddleware(a.sessionStore, authRepo)
 	a.app.Use(authMiddleware.CheckSession())
+	a.app.Use(middleware.CartMiddleware(cartService))
+	a.app.Use(middleware.NotFound())
 
 	products := a.app.Group("/products")
 	{
@@ -75,10 +80,38 @@ func (a *App) Run() {
 
 	a.app.GET("/", func(c *gin.Context) {
 		session := mySession.GetSession(c)
+		topSales, err := productRepo.GetTopSales(6)
+		if err != nil {
+			log.Printf("failed to get top sales products | %v", err)
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
 
 		c.HTML(200, "index.html", gin.H{
+			"session":  session,
+			"topSales": topSales,
+			"page":     "home",
+		})
+	})
+
+	a.app.GET("/cart", func(c *gin.Context) {
+		c.HTML(200, "shopping-cart.html", gin.H{})
+	})
+
+	a.app.GET("/about", func(c *gin.Context) {
+		session := mySession.GetSession(c)
+
+		c.HTML(200, "about.html", gin.H{
 			"session": session,
-			"page":    "home",
+			"page":    "about",
+		})
+	})
+	a.app.GET("/contacts", func(c *gin.Context) {
+		session := mySession.GetSession(c)
+
+		c.HTML(200, "contacts.html", gin.H{
+			"session": session,
+			"page":    "contacts",
 		})
 	})
 

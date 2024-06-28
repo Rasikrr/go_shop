@@ -5,8 +5,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go_shop/internal/models"
+	"go_shop/internal/storage"
 	mn "go_shop/internal/storage/mongo"
-	"time"
 )
 
 type AuthRepo interface {
@@ -27,8 +27,8 @@ func NewAuthRepo(storage *mn.Storage) *AuthRepoImpl {
 }
 
 func (r *AuthRepoImpl) GetUser(email string) (*models.User, error) {
-	collection := r.storage.Client.Database("go_shop").Collection("users")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := r.storage.Client.Database(storage.DB_NAME).Collection(storage.USERS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -44,8 +44,8 @@ func (r *AuthRepoImpl) GetUser(email string) (*models.User, error) {
 }
 
 func (r *AuthRepoImpl) CreateUser(user *models.User) (primitive.ObjectID, error) {
-	collection := r.storage.Client.Database("go_shop").Collection("users")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := r.storage.Client.Database(storage.DB_NAME).Collection(storage.USERS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 	res, err := collection.InsertOne(ctx, user)
@@ -56,8 +56,8 @@ func (r *AuthRepoImpl) CreateUser(user *models.User) (primitive.ObjectID, error)
 }
 
 func (r *AuthRepoImpl) GetUserById(idHex string) (*models.User, error) {
-	collection := r.storage.Client.Database("go_shop").Collection("users")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := r.storage.Client.Database(storage.DB_NAME).Collection(storage.USERS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 
@@ -74,8 +74,8 @@ func (r *AuthRepoImpl) GetUserById(idHex string) (*models.User, error) {
 }
 
 func (r *AuthRepoImpl) UpdateUser(data bson.D, email string) error {
-	collection := r.storage.Client.Database("go_shop").Collection("users")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	collection := r.storage.Client.Database(storage.DB_NAME).Collection(storage.USERS)
+	ctx, cancel := context.WithTimeout(context.Background(), storage.TIMEOUT)
 
 	defer cancel()
 

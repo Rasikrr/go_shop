@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
-	"go_shop/internal/models"
+	"go_shop/internal/domain"
 	"go_shop/internal/repo"
 )
 
@@ -27,17 +27,12 @@ func NewAuthMiddleware(store sessions.Store, userRepo repo.AuthRepo) *AuthMiddle
 	}
 }
 
-type Session struct {
-	Status string       `json:"status"`
-	User   *models.User `json:"user"`
-}
-
 func (m *AuthMiddlewareImpl) CheckSession() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, err := m.sessionStore.Get(c.Request, sessionName)
 		id := session.Values["user_id"]
 
-		ctxSession := &Session{
+		ctxSession := &domain.Session{
 			Status: "unauthorized",
 			User:   nil,
 		}

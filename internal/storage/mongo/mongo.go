@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go_shop/internal/models"
+	"go_shop/internal/storage"
 	"log"
 	"os"
 	"time"
@@ -109,7 +110,7 @@ func (s *Storage) FillTestDate() {
 			Slug:              "product-5",
 		},
 	}
-	collection := s.Client.Database("go_shop").Collection("products")
+	collection := s.Client.Database(storage.DB_NAME).Collection("products")
 	_, err := collection.InsertMany(context.Background(), products)
 	if err != nil {
 		log.Fatal(err)

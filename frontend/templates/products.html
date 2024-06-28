@@ -169,14 +169,19 @@
                         {{range .products}}
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="/static{{index .PathsToPhotos 0}}">
-                                        <ul class="product__hover">
-                                            <li><a href="#"><img src="/static/img/icon/heart.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/static/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                        </ul>
-                                    </div>
+                                    <a href="/products/{{.Slug}}">
+                                        <div class="product__item__pic set-bg" data-setbg="/static{{index .PathsToPhotos 0}}">
+                                            {{if ne .DiscountInPercent 0.0}}
+                                                <span class="label" style="user-select: text;">Sale</span>
+                                            {{end}}
+                                            <ul class="product__hover">
+                                                <li><a href="#"><img src="/static/img/icon/heart.png" alt=""></a></li>
+                                                <li><a href="#"><img src="/static/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </a>
                                     <div class="product__item__text">
-                                        <h6><a href="/products/{{.Slug}}">{{.Name}}</a></h6>
+                                        <h6><a style="color: #2f2f2f" href="/products/{{.Slug}}">{{.Name}}</a></h6>
                                         <div class="rating">
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
@@ -187,7 +192,7 @@
                                         {{if eq .DiscountInPercent 0.0}}
                                             <h5>${{.Price}}</h5>
                                         {{else}}
-                                            <h5>${{sub .Price (mul (div .Price 100.0) .DiscountInPercent) }}</h5>
+                                            <h5 style="color: #c91912">${{sub .Price (mul (div .Price 100.0) .DiscountInPercent) }} <del style="font-size: 15px; color: #7d7a81">${{.Price}}</del></h5>
                                         {{end}}
                                         <div class="product__color__select">
                                             <label for="pc-4">
